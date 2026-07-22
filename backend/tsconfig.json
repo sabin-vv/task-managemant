@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "types": ["node"],
+        "allowImportingTsExtensions": false,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "strict": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true
+    }
+}
