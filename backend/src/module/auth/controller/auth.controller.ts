@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken'
 import type { IAuthService } from '../interfaces/auth.service.interface'
 import type { AuthRequest } from '../../../middleware/auth'
 import { env } from '../../../config/env'
+import { HTTP_STATUS } from '../../../constants/http-status'
+import { AUTH_MESSAGES } from '../../../constants/messages'
+import { ResponseHelper } from '../../../utils/ResponseHelper'
 
 export class AuthController {
     constructor(private readonly authService: IAuthService) {}
@@ -21,12 +24,11 @@ export class AuthController {
         try {
             const { name, email, password } = req.body
             const result = await this.authService.register(name, email, password)
-            const user = result.user
-            this.setTokenCookie(res, user.id)
-            res.status(201).json({ user })
+            this.setTokenCookie(res, result.user.id)
+            ResponseHelper.success(res, { user: result.user }, HTTP_STATUS.CREATED)
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Registration failed'
-            res.status(400).json({ message })
+            const message = error instanceof Error ? error.message : AUTH_MESSAGES.REGISTRATION_FAILED
+            ResponseHelper.error(res, message, HTTP_STATUS.BAD_REQUEST)
         }
     }
 
@@ -34,22 +36,21 @@ export class AuthController {
         try {
             const { email, password } = req.body
             const result = await this.authService.login(email, password)
-            const user = result.user
-            this.setTokenCookie(res, user.id)
-            res.json({ user })
+            this.setTokenCookie(res, result.user.id)
+            ResponseHelper.success(res, { user: result.user })
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Login failed'
-            res.status(400).json({ message })
+            const message = error instanceof Error ? error.message : AUTH_MESSAGES.LOGIN_FAILED
+            ResponseHelper.error(res, message, HTTP_STATUS.BAD_REQUEST)
         }
     }
 
     async me(req: AuthRequest, res: Response) {
         try {
             const result = await this.authService.me(req.userId!)
-            res.json(result)
+            ResponseHelper.success(res, result)
         } catch (error) {
-            const message = error instanceof Error ? error.message : 'Not authenticated'
-            res.status(401).json({ message })
+            const message = error instanceof Error ? error.message : AUTH_MESSAGES.NOT_AUTHENTICATED
+            ResponseHelper.error(res, message, HTTP_STATUS.UNAUTHORIZED)
         }
     }
 
@@ -59,6 +60,6 @@ export class AuthController {
             secure: env.NODE_ENV === 'production',
             sameSite: 'lax',
         })
-        res.json({ message: 'Logged out' })
+        ResponseHelper.success(res, { message: AUTH_MESSAGES.LOGGED_OUT })
     }
 }
