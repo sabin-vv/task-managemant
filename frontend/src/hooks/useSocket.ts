@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { connectSocket, disconnectSocket } from '../api/socket'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from './useAuth'
 
 export function useSocket() {
     const { token } = useAuth()
@@ -8,7 +8,7 @@ export function useSocket() {
     useEffect(() => {
         if (!token) return
 
-        const socket = connectSocket(token)
+        connectSocket(token)
 
         return () => {
             disconnectSocket()

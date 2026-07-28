@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../hooks/useAuth'
 import { useSocket } from '../hooks/useSocket'
 import { fetchTasks, createTask, updateTask, deleteTask, type Task } from '../api/tasks'
 import { getSocket } from '../api/socket'
