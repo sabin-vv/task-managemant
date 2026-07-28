@@ -1,6 +1,5 @@
 import { io, type Socket } from 'socket.io-client'
-
-const SOCKET_URL = 'http://localhost:3000'
+import { SOCKET_URL } from './config'
 
 let socket: Socket | null = null
 

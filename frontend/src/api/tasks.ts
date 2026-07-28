@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:3000/api/tasks'
+import { API_BASE } from './config'
+const API_URL = `${API_BASE}/api/tasks`
 
 const creds = { credentials: 'include' as const, headers: { 'Content-Type': 'application/json' } }
 
