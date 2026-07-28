@@ -33,7 +33,7 @@ export async function fetchStats(): Promise<TaskStats> {
     return res.json()
 }
 
-export async function createTask(data: { title: string; description?: string; status?: string; dueDate?: string }): Promise<Task> {
+export async function createTask(data: { title: string; description?: string; dueDate?: string }): Promise<Task> {
     const res = await fetch(API_URL, {
         method: 'POST',
         ...creds,

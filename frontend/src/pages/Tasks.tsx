@@ -31,7 +31,6 @@ export default function Tasks() {
     const [editingTask, setEditingTask] = useState<Task | null>(null)
     const [formTitle, setFormTitle] = useState('')
     const [formDescription, setFormDescription] = useState('')
-    const [formStatus, setFormStatus] = useState<string>('pending')
     const [formDueDate, setFormDueDate] = useState('')
 
     useEffect(() => {
@@ -63,7 +62,6 @@ export default function Tasks() {
         setEditingTask(null)
         setFormTitle('')
         setFormDescription('')
-        setFormStatus('pending')
         setFormDueDate('')
     }
 
@@ -76,7 +74,6 @@ export default function Tasks() {
             const task = await createTask({
                 title: trimmed,
                 description: formDescription.trim() || undefined,
-                status: formStatus,
                 dueDate: formDueDate || undefined,
             })
             setTasks((prev) => [task, ...prev])
@@ -85,7 +82,7 @@ export default function Tasks() {
             toast.error('Failed to create task')
             setModalOpen(true)
         }
-    }, [formTitle, formDescription, formStatus, formDueDate])
+    }, [formTitle, formDescription, formDueDate])
 
     const handleUpdate = useCallback(async () => {
         if (!editingTask) return
@@ -97,7 +94,6 @@ export default function Tasks() {
             const updated = await updateTask(editingTask._id, {
                 title: trimmed,
                 description: formDescription.trim() || undefined,
-                status: formStatus as Task['status'],
                 dueDate: formDueDate || undefined,
             })
             setTasks((prev) => prev.map((t) => (t._id === updated._id ? updated : t)))
@@ -106,7 +102,7 @@ export default function Tasks() {
             toast.error('Failed to update task')
             setModalOpen(true)
         }
-    }, [editingTask, formTitle, formDescription, formStatus, formDueDate])
+    }, [editingTask, formTitle, formDescription, formDueDate])
 
     const handleToggle = useCallback(async (task: Task) => {
         const nextStatus = task.status === 'completed' ? 'pending' : 'completed'
@@ -139,7 +135,6 @@ export default function Tasks() {
         setEditingTask(task)
         setFormTitle(task.title)
         setFormDescription(task.description ?? '')
-        setFormStatus(task.status)
         setFormDueDate(task.dueDate ? task.dueDate.split('T')[0] : '')
         setModalOpen(true)
     }
@@ -175,6 +170,7 @@ export default function Tasks() {
 
     const handleLogout = () => {
         logout()
+        toast.success('Logged out')
         navigate('/login')
     }
 
@@ -249,14 +245,6 @@ export default function Tasks() {
                         placeholder="Description (optional)"
                         rows={3}
                     />
-                    <select
-                        className={styles.modalSelect}
-                        value={formStatus}
-                        onChange={(e) => setFormStatus(e.target.value)}
-                    >
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                    </select>
                     <input
                         className={styles.modalInput}
                         type="date"
