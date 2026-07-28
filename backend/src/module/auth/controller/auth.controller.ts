@@ -12,10 +12,11 @@ export class AuthController {
 
     private setTokenCookie(res: Response, userId: string) {
         const token = jwt.sign({ userId }, env.JWT_SECRET, { expiresIn: '7d' })
+        const isProd = env.NODE_ENV === 'production'
         res.cookie('token', token, {
             httpOnly: true,
-            secure: env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         })
     }
@@ -40,10 +41,11 @@ export class AuthController {
     }
 
     async logout(_req: Request, res: Response) {
+        const isProd = env.NODE_ENV === 'production'
         res.clearCookie('token', {
             httpOnly: true,
-            secure: env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax',
         })
         ResponseHelper.success(res, { message: AUTH_MESSAGES.LOGGED_OUT })
     }
