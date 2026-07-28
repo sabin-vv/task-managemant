@@ -2,12 +2,12 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { createServer } from 'http'
-import { connectDB } from './src/config/db'
-import { env } from './src/config/env'
-import { initSocket } from './src/config/socket'
-import authRoutes from './src/module/auth/routes/auth'
-import taskRoutes from './src/module/task/routes/task.routes'
-import { errorHandler } from './src/middleware/errorHandler'
+import { connectDB } from './config/db'
+import { env } from './config/env'
+import { initSocket } from './config/socket'
+import authRoutes from './module/auth/routes/auth'
+import taskRoutes from './module/task/routes/task.routes'
+import { errorHandler } from './middleware/errorHandler'
 
 const app = express()
 const httpServer = createServer(app)
