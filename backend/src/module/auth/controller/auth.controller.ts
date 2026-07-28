@@ -21,37 +21,22 @@ export class AuthController {
     }
 
     async register(req: Request, res: Response) {
-        try {
-            const { name, email, password } = req.body
-            const result = await this.authService.register(name, email, password)
-            this.setTokenCookie(res, result.user.id)
-            ResponseHelper.success(res, { user: result.user }, HTTP_STATUS.CREATED)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : AUTH_MESSAGES.REGISTRATION_FAILED
-            ResponseHelper.error(res, message, HTTP_STATUS.BAD_REQUEST)
-        }
+        const { name, email, password } = req.body
+        const result = await this.authService.register(name, email, password)
+        this.setTokenCookie(res, result.user.id)
+        ResponseHelper.success(res, { user: result.user }, HTTP_STATUS.CREATED)
     }
 
     async login(req: Request, res: Response) {
-        try {
-            const { email, password } = req.body
-            const result = await this.authService.login(email, password)
-            this.setTokenCookie(res, result.user.id)
-            ResponseHelper.success(res, { user: result.user })
-        } catch (error) {
-            const message = error instanceof Error ? error.message : AUTH_MESSAGES.LOGIN_FAILED
-            ResponseHelper.error(res, message, HTTP_STATUS.BAD_REQUEST)
-        }
+        const { email, password } = req.body
+        const result = await this.authService.login(email, password)
+        this.setTokenCookie(res, result.user.id)
+        ResponseHelper.success(res, { user: result.user })
     }
 
     async me(req: AuthRequest, res: Response) {
-        try {
-            const result = await this.authService.me(req.userId!)
-            ResponseHelper.success(res, result)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : AUTH_MESSAGES.NOT_AUTHENTICATED
-            ResponseHelper.error(res, message, HTTP_STATUS.UNAUTHORIZED)
-        }
+        const result = await this.authService.me(req.userId!)
+        ResponseHelper.success(res, result)
     }
 
     async logout(_req: Request, res: Response) {
