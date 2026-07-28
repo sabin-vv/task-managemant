@@ -217,10 +217,17 @@
     opacity: 0.5;
 }
 
+.taskDates {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.15rem;
+}
+
 .taskDate {
     font-size: 0.75rem;
     color: var(--text);
-    margin-top: 0.15rem;
 }
 
 .taskDesc {

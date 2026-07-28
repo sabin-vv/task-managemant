@@ -114,8 +114,14 @@ export default function Tasks() {
     }, [])
 
     const handleDelete = useCallback(async (id: string) => {
-        await deleteTask(id)
-    }, [])
+        const prev = tasks
+        setTasks((p) => p.filter((t) => t._id !== id))
+        try {
+            await deleteTask(id)
+        } catch {
+            setTasks(prev)
+        }
+    }, [tasks])
 
     const startEditing = (task: Task) => {
         setEditingId(task._id)
@@ -165,13 +171,20 @@ export default function Tasks() {
         navigate('/login')
     }
 
-    const formatDate = (iso: string) =>
-        new Date(iso).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        })
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const formatDate = (iso: string) => {
+        const d = new Date(iso)
+        const h = d.getHours()
+        const ampm = h >= 12 ? 'PM' : 'AM'
+        const pad = (n: number) => String(n).padStart(2, '0')
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${pad(h % 12 || 12)}:${pad(d.getMinutes())} ${ampm}`
+    }
+
+    const formatDateOnly = (iso: string) => {
+        const d = new Date(iso)
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
+    }
 
     const q = search.toLowerCase()
     const filtered = tasks.filter(
@@ -309,7 +322,10 @@ export default function Tasks() {
                                 </span>
                             </div>
                             {task.description && <div className={styles.taskDesc}>{task.description}</div>}
-                            <div className={styles.taskDate}>{formatDate(task.createdAt)}</div>
+                            <div className={styles.taskDates}>
+                                <span className={styles.taskDate}>Created: {formatDate(task.createdAt)}</span>
+                                {task.dueDate && <span className={styles.taskDate}>Due: {formatDateOnly(task.dueDate)}</span>}
+                            </div>
                         </div>
 
                         {task.status !== 'completed' && (
