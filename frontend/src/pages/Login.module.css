@@ -1,0 +1,45 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow);
+}
+
+.title {
+    font-size: 1.75rem;
+    color: var(--text-h);
+    margin-bottom: 0.25rem;
+}
+
+.subtitle {
+    color: var(--text);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.footer {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
