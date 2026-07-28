@@ -18,7 +18,7 @@ initSocket(httpServer)
 
 app.use(
     cors({
-        origin: ['http://localhost:5173'],
+        origin: ['http://localhost:5173', 'https://task-managemant.vercel.app/'],
         credentials: true,
     }),
 )
