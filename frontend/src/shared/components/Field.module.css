@@ -40,6 +40,10 @@
     flex: 1;
     width: 100%;
     padding: 0.55rem 0.75rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-h);
+    background: none;
     border: none;
     outline: none;
 }
