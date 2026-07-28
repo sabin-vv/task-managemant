@@ -27,6 +27,7 @@ export default function Tasks() {
 
     const [search, setSearch] = useState('')
     const [modalOpen, setModalOpen] = useState(false)
+    const [editingTask, setEditingTask] = useState<Task | null>(null)
     const [formTitle, setFormTitle] = useState('')
     const [formDescription, setFormDescription] = useState('')
     const [formStatus, setFormStatus] = useState<string>('pending')
@@ -58,6 +59,7 @@ export default function Tasks() {
     }, [])
 
     const resetForm = () => {
+        setEditingTask(null)
         setFormTitle('')
         setFormDescription('')
         setFormStatus('pending')
@@ -82,6 +84,25 @@ export default function Tasks() {
         }
     }, [formTitle, formDescription, formStatus, formDueDate])
 
+    const handleUpdate = useCallback(async () => {
+        if (!editingTask) return
+        const trimmed = formTitle.trim()
+        if (!trimmed) return
+        setModalOpen(false)
+        resetForm()
+        try {
+            const updated = await updateTask(editingTask._id, {
+                title: trimmed,
+                description: formDescription.trim() || undefined,
+                status: formStatus as Task['status'],
+                dueDate: formDueDate || undefined,
+            })
+            setTasks((prev) => prev.map((t) => (t._id === updated._id ? updated : t)))
+        } catch {
+            setModalOpen(true)
+        }
+    }, [editingTask, formTitle, formDescription, formStatus, formDueDate])
+
     const handleToggle = useCallback(async (task: Task) => {
         const nextStatus = task.status === 'completed' ? 'pending' : 'completed'
         setTasks((prev) => prev.map((t) => (t._id === task._id ? { ...t, status: nextStatus } : t)))
@@ -99,6 +120,15 @@ export default function Tasks() {
     const startEditing = (task: Task) => {
         setEditingId(task._id)
         setEditTitle(task.title)
+    }
+
+    const openEditModal = (task: Task) => {
+        setEditingTask(task)
+        setFormTitle(task.title)
+        setFormDescription(task.description ?? '')
+        setFormStatus(task.status)
+        setFormDueDate(task.dueDate ? task.dueDate.split('T')[0] : '')
+        setModalOpen(true)
     }
 
     const cancelEditing = () => {
@@ -165,7 +195,13 @@ export default function Tasks() {
 
             <div className={styles.toolbar}>
                 <SearchBar value={search} onChange={setSearch} placeholder="Search tasks..." />
-                <button className={styles.addBtn} onClick={() => setModalOpen(true)}>
+                <button
+                    className={styles.addBtn}
+                    onClick={() => {
+                        resetForm()
+                        setModalOpen(true)
+                    }}
+                >
                     + Add Task
                 </button>
             </div>
@@ -176,7 +212,7 @@ export default function Tasks() {
                     setModalOpen(false)
                     resetForm()
                 }}
-                title="New Task"
+                title={editingTask ? 'Edit Task' : 'New Task'}
             >
                 <div className={styles.modalForm}>
                     <input
@@ -199,7 +235,6 @@ export default function Tasks() {
                         onChange={(e) => setFormStatus(e.target.value)}
                     >
                         <option value="pending">Pending</option>
-                        <option value="in-progress">In Progress</option>
                         <option value="completed">Completed</option>
                     </select>
                     <input
@@ -220,10 +255,10 @@ export default function Tasks() {
                         </button>
                         <button
                             className={styles.addBtn}
-                            onClick={handleAdd}
+                            onClick={editingTask ? handleUpdate : handleAdd}
                             disabled={!formTitle.trim() || !formDueDate}
                         >
-                            Create
+                            {editingTask ? 'Update' : 'Create'}
                         </button>
                     </div>
                 </div>
@@ -278,7 +313,7 @@ export default function Tasks() {
                         </div>
 
                         {task.status !== 'completed' && (
-                            <button className={styles.editBtn} onClick={() => startEditing(task)}>
+                            <button className={styles.editBtn} onClick={() => openEditModal(task)}>
                                 <Pencil />
                             </button>
                         )}
