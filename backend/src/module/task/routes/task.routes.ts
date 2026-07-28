@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { authenticate } from '../../middleware/auth'
+import { authenticate } from '../../../middleware/auth'
 import { TaskController } from '../controller/task.controller'
 import { TaskService } from '../service/task.service'
 import { TaskRepository } from '../repository/task.repository'

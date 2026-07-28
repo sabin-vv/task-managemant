@@ -1,10 +1,10 @@
 import express from 'express'
 import { createServer } from 'http'
-import { connectDB } from './config/db'
-import { env } from './config/env'
-import { initSocket } from './config/socket'
-import authRoutes from './auth/routes/auth'
-import taskRoutes from './task/routes/task.routes'
+import { connectDB } from './src/config/db'
+import { env } from './src/config/env'
+import { initSocket } from './src/config/socket'
+import authRoutes from './src/module/auth/routes/auth'
+import taskRoutes from './src/module/task/routes/task.routes'
 
 const app = express()
 const httpServer = createServer(app)

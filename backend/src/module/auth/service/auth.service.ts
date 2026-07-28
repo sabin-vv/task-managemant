@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { IAuthService, AuthResult } from '../interfaces/auth.service.interface'
 import type { IAuthRepository } from '../interfaces/auth.repository.interface'
-import { env } from '../../config/env'
+import { env } from '../../../config/env'
 
 export class AuthService implements IAuthService {
     constructor(private readonly repo: IAuthRepository) {}

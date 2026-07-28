@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express'
 import type { ITaskService } from '../interfaces/task.service.interface'
-import type { AuthRequest } from '../../middleware/auth'
+import type { AuthRequest } from '../../../middleware/auth'
 
 export class TaskController {
     constructor(private readonly taskService: ITaskService) {}

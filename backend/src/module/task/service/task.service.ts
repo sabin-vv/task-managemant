@@ -1,7 +1,7 @@
 import type { ITaskService } from '../interfaces/task.service.interface'
 import type { ITaskRepository, TaskStatsResult } from '../interfaces/task.repository.interface'
 import type { ITask } from '../types/task.types'
-import { getIO } from '../../config/socket'
+import { getIO } from '../../../config/socket'
 import mongoose from 'mongoose'
 
 export class TaskService implements ITaskService {
