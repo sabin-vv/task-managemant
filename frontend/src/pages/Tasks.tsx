@@ -10,6 +10,8 @@ import Modal from '../shared/components/Modal'
 import SearchBar from '../shared/components/SearchBar'
 import styles from './Tasks.module.css'
 
+const TITLE_REGEX = /^[a-zA-Z0-9 ]+$/
+
 const statusLabel: Record<string, string> = {
     pending: 'Pending',
     'in-progress': 'In Progress',
@@ -68,6 +70,10 @@ export default function Tasks() {
     const handleAdd = useCallback(async () => {
         const trimmed = formTitle.trim()
         if (!trimmed) return
+        if (!TITLE_REGEX.test(trimmed)) {
+            toast.error('Title can only contain letters and numbers')
+            return
+        }
         setModalOpen(false)
         resetForm()
         try {
@@ -88,6 +94,10 @@ export default function Tasks() {
         if (!editingTask) return
         const trimmed = formTitle.trim()
         if (!trimmed) return
+        if (!TITLE_REGEX.test(trimmed)) {
+            toast.error('Title can only contain letters and numbers')
+            return
+        }
         setModalOpen(false)
         resetForm()
         try {
@@ -148,6 +158,11 @@ export default function Tasks() {
         const id = editingId
         const trimmed = editTitle.trim()
         if (!id || !trimmed) {
+            cancelEditing()
+            return
+        }
+        if (!TITLE_REGEX.test(trimmed)) {
+            toast.error('Title can only contain letters and numbers')
             cancelEditing()
             return
         }

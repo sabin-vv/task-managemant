@@ -3,7 +3,7 @@ import type { ITask } from '../types/task.types'
 
 const taskSchema = new Schema<ITask>(
     {
-        title: { type: String, required: true, trim: true },
+        title: { type: String, required: true, trim: true, match: /^[a-zA-Z0-9 ]+$/ },
         description: { type: String, trim: true },
         status: {
             type: String,
