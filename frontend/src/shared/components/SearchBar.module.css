@@ -1,0 +1,36 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    transition: border-color 0.2s;
+}
+
+.wrapper:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.icon {
+    flex-shrink: 0;
+    color: var(--text);
+    opacity: 0.5;
+}
+
+.input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text-h);
+}
+
+.input::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}

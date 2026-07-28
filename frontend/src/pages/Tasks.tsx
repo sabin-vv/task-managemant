@@ -6,6 +6,7 @@ import { useSocket } from '../hooks/useSocket'
 import { fetchTasks, createTask, updateTask, deleteTask, type Task } from '../api/tasks'
 import { getSocket } from '../api/socket'
 import Modal from '../shared/components/Modal'
+import SearchBar from '../shared/components/SearchBar'
 import styles from './Tasks.module.css'
 
 const statusLabel: Record<string, string> = {
@@ -24,6 +25,7 @@ export default function Tasks() {
     const [editTitle, setEditTitle] = useState('')
     const editRef = useRef<HTMLInputElement>(null)
 
+    const [search, setSearch] = useState('')
     const [modalOpen, setModalOpen] = useState(false)
     const [formTitle, setFormTitle] = useState('')
     const [formDescription, setFormDescription] = useState('')
@@ -141,6 +143,11 @@ export default function Tasks() {
             minute: '2-digit',
         })
 
+    const q = search.toLowerCase()
+    const filtered = tasks.filter(
+        (t) => t.title.toLowerCase().includes(q) || (t.description?.toLowerCase() ?? '').includes(q),
+    )
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -156,9 +163,12 @@ export default function Tasks() {
                 </div>
             </div>
 
-            <button className={styles.addBtn} onClick={() => setModalOpen(true)}>
-                + Add Task
-            </button>
+            <div className={styles.toolbar}>
+                <SearchBar value={search} onChange={setSearch} placeholder="Search tasks..." />
+                <button className={styles.addBtn} onClick={() => setModalOpen(true)}>
+                    + Add Task
+                </button>
+            </div>
 
             <Modal
                 open={modalOpen}
@@ -208,7 +218,11 @@ export default function Tasks() {
                         >
                             Cancel
                         </button>
-                        <button className={styles.addBtn} onClick={handleAdd} disabled={!formTitle.trim() || !formDueDate}>
+                        <button
+                            className={styles.addBtn}
+                            onClick={handleAdd}
+                            disabled={!formTitle.trim() || !formDueDate}
+                        >
                             Create
                         </button>
                     </div>
@@ -216,9 +230,13 @@ export default function Tasks() {
             </Modal>
 
             <div className={styles.taskList}>
-                {tasks.length === 0 && <p className={styles.empty}>No tasks yet. Add one above!</p>}
+                {filtered.length === 0 && (
+                    <p className={styles.empty}>
+                        {tasks.length === 0 ? 'No tasks yet. Add one above!' : 'No tasks match your search.'}
+                    </p>
+                )}
 
-                {tasks.map((task) => (
+                {filtered.map((task) => (
                     <div key={task._id} className={styles.taskCard}>
                         <input
                             type="checkbox"
