@@ -8,7 +8,11 @@ let io: Server | null = null
 export function initSocket(httpServer: HTTPServer) {
     io = new Server(httpServer, {
         cors: {
-            origin: ['http://localhost:5173'],
+            origin: [
+                'http://localhost:5173',
+                'https://task-managemant.vercel.app',
+                'https://task-managemant-t1pd.vercel.app',
+            ],
             methods: ['GET', 'POST'],
             credentials: true,
         },
