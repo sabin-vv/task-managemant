@@ -10,6 +10,8 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .header h1 {
@@ -20,6 +22,10 @@
 .userInfo {
     font-size: 0.85rem;
     color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .logoutBtn {
@@ -31,7 +37,6 @@
     cursor: pointer;
     font-family: inherit;
     font-size: 0.85rem;
-    margin-left: 0.75rem;
     transition: background 0.15s;
 }
 
@@ -121,6 +126,19 @@
     color: var(--text-h);
     font-weight: 500;
     word-break: break-word;
+    cursor: text;
+}
+
+.taskTitleInput {
+    width: 100%;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-h);
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
 }
 
 .taskTitleDone {
@@ -180,4 +198,36 @@
 .statusCompleted {
     background: #d1fae5;
     color: #065f46;
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 1rem 0.75rem;
+    }
+
+    .header h1 {
+        font-size: 1.25rem;
+    }
+
+    .userInfo {
+        font-size: 0.8rem;
+    }
+
+    .taskCard {
+        padding: 0.6rem 0.75rem;
+        gap: 0.5rem;
+    }
+
+    .taskTitle {
+        font-size: 0.9rem;
+    }
+
+    .statusBadge {
+        font-size: 0.65rem;
+        padding: 0.1rem 0.4rem;
+    }
+
+    .deleteBtn {
+        font-size: 1rem;
+    }
 }

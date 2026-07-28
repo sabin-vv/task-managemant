@@ -21,3 +21,10 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+@media (max-width: 480px) {
+    .button {
+        padding: 0.55rem;
+        font-size: 0.9rem;
+    }
+}

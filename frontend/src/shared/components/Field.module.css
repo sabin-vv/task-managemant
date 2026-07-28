@@ -69,3 +69,14 @@
     margin-top: 0.2rem;
     text-align: left;
 }
+
+@media (max-width: 480px) {
+    .input {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.65rem;
+    }
+
+    .label {
+        font-size: 0.8rem;
+    }
+}

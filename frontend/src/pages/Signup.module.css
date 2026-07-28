@@ -54,3 +54,13 @@
 .footer a:hover {
     text-decoration: underline;
 }
+
+@media (max-width: 480px) {
+    .card {
+        padding: 1.25rem;
+    }
+
+    .title {
+        font-size: 1.3rem;
+    }
+}

@@ -79,7 +79,7 @@ export default function Stats() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className={styles.chartsRow}>
                         <div className={styles.chartSection}>
                             <div className={styles.chartTitle}>Status Distribution</div>
                             <ResponsiveContainer width="100%" height={260}>

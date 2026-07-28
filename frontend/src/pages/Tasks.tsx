@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useSocket } from '../hooks/useSocket'
@@ -19,6 +19,9 @@ export default function Tasks() {
 
     const [tasks, setTasks] = useState<Task[]>([])
     const [title, setTitle] = useState('')
+    const [editingId, setEditingId] = useState<string | null>(null)
+    const [editTitle, setEditTitle] = useState('')
+    const editRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         fetchTasks()
@@ -66,6 +69,40 @@ export default function Tasks() {
     const handleDelete = useCallback(async (id: string) => {
         await deleteTask(id)
     }, [])
+
+    const startEditing = (task: Task) => {
+        setEditingId(task._id)
+        setEditTitle(task.title)
+    }
+
+    const cancelEditing = () => {
+        setEditingId(null)
+        setEditTitle('')
+    }
+
+    const saveEditing = useCallback(async () => {
+        const id = editingId
+        const trimmed = editTitle.trim()
+        if (!id || !trimmed) {
+            cancelEditing()
+            return
+        }
+        setEditingId(null)
+        setEditTitle('')
+        try {
+            await updateTask(id, { title: trimmed })
+        } catch {
+            setEditingId(id)
+            setEditTitle(trimmed)
+        }
+    }, [editingId, editTitle])
+
+    useEffect(() => {
+        if (editingId && editRef.current) {
+            editRef.current.focus()
+            editRef.current.select()
+        }
+    }, [editingId])
 
     const handleLogout = () => {
         logout()
@@ -122,11 +159,26 @@ export default function Tasks() {
                         />
 
                         <div className={styles.taskContent}>
-                            <div
-                                className={`${styles.taskTitle} ${task.status === 'completed' ? styles.taskTitleDone : ''}`}
-                            >
-                                {task.title}
-                            </div>
+                            {editingId === task._id ? (
+                                <input
+                                    ref={editRef}
+                                    className={styles.taskTitleInput}
+                                    value={editTitle}
+                                    onChange={(e) => setEditTitle(e.target.value)}
+                                    onBlur={saveEditing}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') saveEditing()
+                                        if (e.key === 'Escape') cancelEditing()
+                                    }}
+                                />
+                            ) : (
+                                <div
+                                    className={`${styles.taskTitle} ${task.status === 'completed' ? styles.taskTitleDone : ''}`}
+                                    onClick={() => startEditing(task)}
+                                >
+                                    {task.title}
+                                </div>
+                            )}
                             <div className={styles.taskDate}>{formatDate(task.createdAt)}</div>
                         </div>
 
