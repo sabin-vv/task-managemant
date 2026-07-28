@@ -16,9 +16,18 @@ connectDB()
 
 initSocket(httpServer)
 
+app.use((_req, res, next) => {
+    res.setHeader('Access-Control-Allow-Private-Network', 'true')
+    next()
+})
+
 app.use(
     cors({
-        origin: ['http://localhost:5173', 'https://task-managemant.vercel.app'],
+        origin: [
+            'http://localhost:5173',
+            'https://task-managemant.vercel.app',
+            'https://task-managemant-t1pd.vercel.app',
+        ],
         credentials: true,
     }),
 )
