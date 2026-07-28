@@ -26,14 +26,20 @@
     box-shadow: 0 0 0 3px var(--accent-bg);
 }
 
+.input::-ms-reveal,
+.input::-ms-clear {
+    display: none;
+}
+
+.input::-webkit-credentials-auto-fill-button,
+.input::-webkit-textfield-decoration-container {
+    display: none;
+}
+
 .input {
     flex: 1;
     width: 100%;
     padding: 0.55rem 0.75rem;
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: var(--text-h);
-    background: none;
     border: none;
     outline: none;
 }

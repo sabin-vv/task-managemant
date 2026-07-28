@@ -1,4 +1,5 @@
 import { type InputHTMLAttributes, forwardRef, useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 import fieldStyles from './Field.module.css'
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
@@ -24,8 +25,9 @@ const PasswordField = forwardRef<HTMLInputElement, Props>(({ label, error, class
                     className={fieldStyles.toggle}
                     onClick={() => setVisible((v) => !v)}
                     tabIndex={-1}
+                    aria-label={visible ? 'Hide password' : 'Show password'}
                 >
-                    {visible ? 'Hide' : 'Show'}
+                    {visible ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
             </div>
             {error && <span className={fieldStyles.error}>{error}</span>}
