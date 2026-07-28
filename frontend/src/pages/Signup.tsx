@@ -1,13 +1,19 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { signupSchema, type SignupFormData } from '../schemas/auth.schema'
+import { useAuth } from '../context/AuthContext'
 import Input from '../shared/components/Input'
 import PasswordField from '../shared/components/PasswordField'
 import Button from '../shared/components/Button'
 import styles from './Signup.module.css'
 
 export default function Signup() {
+    const { register: registerUser } = useAuth()
+    const navigate = useNavigate()
+    const [apiError, setApiError] = useState('')
+
     const {
         register,
         handleSubmit,
@@ -17,7 +23,13 @@ export default function Signup() {
     })
 
     const onSubmit = async (data: SignupFormData) => {
-        console.log('Signup data:', data)
+        setApiError('')
+        try {
+            await registerUser(data.name, data.email, data.password)
+            navigate('/')
+        } catch (err) {
+            setApiError(err instanceof Error ? err.message : 'Registration failed')
+        }
     }
 
     return (
@@ -27,6 +39,8 @@ export default function Signup() {
                 <p className={styles.subtitle}>Sign up to get started</p>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    {apiError && <div className={styles.apiError}>{apiError}</div>}
+
                     <Input
                         label="Name"
                         type="text"

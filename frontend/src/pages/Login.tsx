@@ -1,13 +1,19 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { loginSchema, type LoginFormData } from '../schemas/auth.schema'
+import { useAuth } from '../context/AuthContext'
 import Input from '../shared/components/Input'
 import PasswordField from '../shared/components/PasswordField'
 import Button from '../shared/components/Button'
 import styles from './Login.module.css'
 
 export default function Login() {
+    const { login } = useAuth()
+    const navigate = useNavigate()
+    const [apiError, setApiError] = useState('')
+
     const {
         register,
         handleSubmit,
@@ -17,7 +23,13 @@ export default function Login() {
     })
 
     const onSubmit = async (data: LoginFormData) => {
-        console.log('Login data:', data)
+        setApiError('')
+        try {
+            await login(data.email, data.password)
+            navigate('/')
+        } catch (err) {
+            setApiError(err instanceof Error ? err.message : 'Login failed')
+        }
     }
 
     return (
@@ -27,6 +39,8 @@ export default function Login() {
                 <p className={styles.subtitle}>Sign in to your account</p>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    {apiError && <div className={styles.apiError}>{apiError}</div>}
+
                     <Input
                         label="Email"
                         type="email"
