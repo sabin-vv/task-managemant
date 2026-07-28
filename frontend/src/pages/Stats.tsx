@@ -7,7 +7,6 @@ import styles from './Stats.module.css'
 
 const STATUS_COLORS: Record<string, string> = {
     pending: '#f59e0b',
-    'in-progress': '#3b82f6',
     completed: '#10b981',
 }
 
@@ -25,7 +24,6 @@ export default function Stats() {
     const pieData = stats
         ? [
               { name: 'Pending', value: stats.pending },
-              { name: 'In Progress', value: stats.inProgress },
               { name: 'Completed', value: stats.completed },
           ].filter((d) => d.value > 0)
         : []
@@ -33,7 +31,6 @@ export default function Stats() {
     const barData = stats
         ? [
               { name: 'Pending', count: stats.pending },
-              { name: 'In Progress', count: stats.inProgress },
               { name: 'Completed', count: stats.completed },
           ]
         : []
@@ -63,10 +60,7 @@ export default function Stats() {
                             <div className={styles.cardLabel}>Pending</div>
                             <div className={styles.cardValue}>{stats.pending}</div>
                         </div>
-                        <div className={styles.card}>
-                            <div className={styles.cardLabel}>In Progress</div>
-                            <div className={styles.cardValue}>{stats.inProgress}</div>
-                        </div>
+                        
                         <div className={styles.card}>
                             <div className={styles.cardLabel}>Completed</div>
                             <div className={styles.cardValue}>{stats.completed}</div>
@@ -88,7 +82,7 @@ export default function Stats() {
                                         {pieData.map((entry) => (
                                             <Cell
                                                 key={entry.name}
-                                                fill={STATUS_COLORS[entry.name === 'In Progress' ? 'in-progress' : entry.name.toLowerCase()]}
+                                                fill={STATUS_COLORS[entry.name.toLowerCase()]}
                                             />
                                         ))}
                                     </Pie>
@@ -109,7 +103,7 @@ export default function Stats() {
                                         {barData.map((entry) => (
                                             <Cell
                                                 key={entry.name}
-                                                fill={STATUS_COLORS[entry.name === 'In Progress' ? 'in-progress' : entry.name.toLowerCase()]}
+                                                fill={STATUS_COLORS[entry.name.toLowerCase()]}
                                             />
                                         ))}
                                     </Bar>

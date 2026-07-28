@@ -16,7 +16,6 @@ export interface Task {
 export interface TaskStats {
     total: number
     pending: number
-    inProgress: number
     completed: number
     overdue: number
 }

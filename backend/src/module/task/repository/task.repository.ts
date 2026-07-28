@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import type { ITaskRepository, TaskStatsResult } from '../interfaces/task.repository.interface'
 import type { ITask } from '../types/task.types'
 import Task from '../model/task.model'
@@ -27,7 +28,7 @@ export class TaskRepository extends BaseRepository<ITask> implements ITaskReposi
     async getStats(userId: string): Promise<TaskStatsResult> {
         const [total, byStatus, overdue] = await Promise.all([
             this.countDocuments({ user: userId }),
-            this.model.aggregate([{ $match: { user: userId } }, { $group: { _id: '$status', count: { $sum: 1 } } }]),
+            this.model.aggregate([{ $match: { user: new mongoose.Types.ObjectId(userId) } }, { $group: { _id: '$status', count: { $sum: 1 } } }]),
             this.countDocuments({
                 user: userId,
                 status: { $ne: 'completed' },
@@ -35,7 +36,7 @@ export class TaskRepository extends BaseRepository<ITask> implements ITaskReposi
             }),
         ])
 
-        const statusMap: Record<string, number> = { pending: 0, 'in-progress': 0, completed: 0 }
+        const statusMap: Record<string, number> = { pending: 0, completed: 0 }
         for (const entry of byStatus) {
             statusMap[entry._id] = entry.count
         }
@@ -43,7 +44,6 @@ export class TaskRepository extends BaseRepository<ITask> implements ITaskReposi
         return {
             total,
             pending: statusMap.pending,
-            inProgress: statusMap['in-progress'],
             completed: statusMap.completed,
             overdue,
         }

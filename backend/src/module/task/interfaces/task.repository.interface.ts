@@ -3,7 +3,6 @@ import type { ITask } from '../types/task.types'
 export interface TaskStatsResult {
     total: number
     pending: number
-    inProgress: number
     completed: number
     overdue: number
 }
