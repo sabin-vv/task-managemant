@@ -1,33 +1,34 @@
 import type { ITaskRepository, TaskStatsResult } from '../interfaces/task.repository.interface'
 import type { ITask } from '../types/task.types'
 import Task from '../model/task.model'
+import { BaseRepository } from '../../../repositories/BaseRepository'
 
-export class TaskRepository implements ITaskRepository {
+export class TaskRepository extends BaseRepository<ITask> implements ITaskRepository {
+    constructor() {
+        super(Task)
+    }
+
     async findAll(userId: string): Promise<ITask[]> {
-        return Task.find({ user: userId }).sort({ createdAt: -1 })
+        return this.find({ user: userId }, { createdAt: -1 })
     }
 
     async findById(id: string, userId: string): Promise<ITask | null> {
-        return Task.findOne({ _id: id, user: userId })
-    }
-
-    async create(data: Partial<ITask>): Promise<ITask> {
-        return Task.create(data)
+        return this.findOne({ _id: id, user: userId })
     }
 
     async update(id: string, userId: string, data: Partial<ITask>): Promise<ITask | null> {
-        return Task.findOneAndUpdate({ _id: id, user: userId }, data, { new: true, runValidators: true })
+        return this.findOneAndUpdate({ _id: id, user: userId }, data)
     }
 
     async delete(id: string, userId: string): Promise<ITask | null> {
-        return Task.findOneAndDelete({ _id: id, user: userId })
+        return this.findOneAndDelete({ _id: id, user: userId })
     }
 
     async getStats(userId: string): Promise<TaskStatsResult> {
         const [total, byStatus, overdue] = await Promise.all([
-            Task.countDocuments({ user: userId }),
-            Task.aggregate([{ $match: { user: userId } }, { $group: { _id: '$status', count: { $sum: 1 } } }]),
-            Task.countDocuments({
+            this.countDocuments({ user: userId }),
+            this.model.aggregate([{ $match: { user: userId } }, { $group: { _id: '$status', count: { $sum: 1 } } }]),
+            this.countDocuments({
                 user: userId,
                 status: { $ne: 'completed' },
                 dueDate: { $lt: new Date() },

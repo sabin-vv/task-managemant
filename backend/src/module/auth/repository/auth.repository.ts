@@ -1,17 +1,18 @@
 import type { IAuthRepository } from '../interfaces/auth.repository.interface'
 import type { IUser } from '../../user/types/user.types'
 import User from '../../user/models/user.model'
+import { BaseRepository } from '../../../repositories/BaseRepository'
 
-export class AuthRepository implements IAuthRepository {
-    async findByEmail(email: string): Promise<IUser | null> {
-        return User.findOne({ email })
+export class AuthRepository extends BaseRepository<IUser> implements IAuthRepository {
+    constructor() {
+        super(User)
     }
 
     async findById(id: string): Promise<IUser | null> {
-        return User.findById(id)
+        return this.findOne({ _id: id })
     }
 
-    async create(data: { name: string; email: string; password: string }): Promise<IUser> {
-        return User.create(data)
+    async findByEmail(email: string): Promise<IUser | null> {
+        return this.findOne({ email })
     }
 }
