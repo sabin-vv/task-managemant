@@ -1,5 +1,6 @@
 import { io, type Socket } from 'socket.io-client'
 import { SOCKET_URL } from './config'
+import { getAccessToken } from './token'
 
 let socket: Socket | null = null
 
@@ -7,7 +8,7 @@ export function connectSocket() {
     if (socket?.connected) return socket
 
     socket = io(SOCKET_URL, {
-        withCredentials: true,
+        auth: { token: getAccessToken() },
         transports: ['websocket', 'polling'],
     })
 

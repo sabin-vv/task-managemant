@@ -1,9 +1,7 @@
 import { Server as HTTPServer } from 'http'
 import { Server } from 'socket.io'
-import jwt from 'jsonwebtoken'
-import * as cookie from 'cookie'
 import { AppError } from '../errors/AppError'
-import { env } from './env'
+import { verifyToken } from './token'
 
 let io: Server | null = null
 
@@ -17,13 +15,13 @@ export function initSocket(httpServer: HTTPServer) {
     })
 
     io.use((socket, next) => {
-        const token = socket.handshake.auth?.token || cookie.parseCookie(socket.handshake.headers.cookie || '')?.token
+        const token = socket.handshake.auth?.token
         if (!token) {
             return next(new AppError('Authentication required', 401))
         }
         try {
-            const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string }
-            socket.data.userId = decoded.userId
+            const { userId } = verifyToken(token)
+            socket.data.userId = userId
             next()
         } catch {
             next(new AppError('Invalid token', 401))

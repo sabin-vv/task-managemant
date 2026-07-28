@@ -1,8 +1,9 @@
-import type { IAuthService, AuthResult } from '../interfaces/auth.service.interface'
+import type { IAuthService, AuthResult, TokenResult } from '../interfaces/auth.service.interface'
 import type { IAuthRepository } from '../interfaces/auth.repository.interface'
 import { AUTH_MESSAGES } from '../../../constants/messages'
 import { HTTP_STATUS } from '../../../constants/http-status'
 import { AppError } from '../../../errors/AppError'
+import { signAccessToken, signRefreshToken, verifyToken } from '../../../config/token'
 
 export class AuthService implements IAuthService {
     constructor(private readonly repo: IAuthRepository) {}
@@ -15,6 +16,7 @@ export class AuthService implements IAuthService {
 
         return {
             user: { id: user._id.toString(), name: user.name, email: user.email },
+            accessToken: signAccessToken(user._id.toString()),
         }
     }
 
@@ -27,6 +29,7 @@ export class AuthService implements IAuthService {
 
         return {
             user: { id: user._id.toString(), name: user.name, email: user.email },
+            accessToken: signAccessToken(user._id.toString()),
         }
     }
 
@@ -36,6 +39,14 @@ export class AuthService implements IAuthService {
 
         return {
             user: { id: user._id.toString(), name: user.name, email: user.email },
+            accessToken: '',
         }
+    }
+
+    async refreshToken(userId: string): Promise<TokenResult> {
+        const user = await this.repo.findById(userId)
+        if (!user) throw new AppError(AUTH_MESSAGES.USER_NOT_FOUND, HTTP_STATUS.NOT_FOUND)
+
+        return { accessToken: signAccessToken(userId) }
     }
 }

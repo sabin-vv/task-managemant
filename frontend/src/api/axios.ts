@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { API_BASE } from './config'
+import { getAccessToken, setAccessToken } from './token'
 
 const api = axios.create({
     baseURL: API_BASE,
@@ -7,9 +8,58 @@ const api = axios.create({
     headers: { 'Content-Type': 'application/json' },
 })
 
+api.interceptors.request.use((config) => {
+    const token = getAccessToken()
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+})
+
+let isRefreshing = false
+let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: unknown) => void }> = []
+
+function processQueue(error: unknown, token: string | null = null) {
+    failedQueue.forEach(({ resolve, reject }) => {
+        if (error) reject(error)
+        else resolve(token!)
+    })
+    failedQueue = []
+}
+
 api.interceptors.response.use(
     (res) => res,
-    (err) => {
+    async (err) => {
+        const originalRequest = err.config
+
+        if (err.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh')) {
+            if (isRefreshing) {
+                return new Promise<string>((resolve, reject) => {
+                    failedQueue.push({ resolve, reject })
+                }).then((token) => {
+                    originalRequest.headers.Authorization = `Bearer ${token}`
+                    return api(originalRequest)
+                })
+            }
+
+            originalRequest._retry = true
+            isRefreshing = true
+
+            try {
+                const { data } = await axios.post(`${API_BASE}/api/auth/refresh`, {}, { withCredentials: true })
+                setAccessToken(data.accessToken)
+                processQueue(null, data.accessToken)
+                originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
+                return api(originalRequest)
+            } catch (refreshError) {
+                processQueue(refreshError, null)
+                setAccessToken(null)
+                return Promise.reject(refreshError)
+            } finally {
+                isRefreshing = false
+            }
+        }
+
         const message = err.response?.data?.message || err.message || 'Something went wrong'
         return Promise.reject(new Error(message))
     },
