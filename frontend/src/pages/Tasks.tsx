@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Pencil } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { useAuth } from '../hooks/useAuth'
 import { useSocket } from '../hooks/useSocket'
 import { fetchTasks, createTask, updateTask, deleteTask, type Task } from '../api/tasks'
@@ -79,7 +80,9 @@ export default function Tasks() {
                 dueDate: formDueDate || undefined,
             })
             setTasks((prev) => [task, ...prev])
+            toast.success('Task created')
         } catch {
+            toast.error('Failed to create task')
             setModalOpen(true)
         }
     }, [formTitle, formDescription, formStatus, formDueDate])
@@ -98,7 +101,9 @@ export default function Tasks() {
                 dueDate: formDueDate || undefined,
             })
             setTasks((prev) => prev.map((t) => (t._id === updated._id ? updated : t)))
+            toast.success('Task updated')
         } catch {
+            toast.error('Failed to update task')
             setModalOpen(true)
         }
     }, [editingTask, formTitle, formDescription, formStatus, formDueDate])
@@ -118,7 +123,9 @@ export default function Tasks() {
         setTasks((p) => p.filter((t) => t._id !== id))
         try {
             await deleteTask(id)
+            toast.success('Task deleted')
         } catch {
+            toast.error('Failed to delete task')
             setTasks(prev)
         }
     }, [tasks])

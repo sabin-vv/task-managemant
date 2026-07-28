@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import { loginSchema, type LoginFormData } from '../schemas/auth.schema'
 import { useAuth } from '../hooks/useAuth'
 import Input from '../shared/components/Input'
@@ -12,7 +12,6 @@ import styles from './Login.module.css'
 export default function Login() {
     const { login } = useAuth()
     const navigate = useNavigate()
-    const [apiError, setApiError] = useState('')
 
     const {
         register,
@@ -23,12 +22,12 @@ export default function Login() {
     })
 
     const onSubmit = async (data: LoginFormData) => {
-        setApiError('')
         try {
             await login(data.email, data.password)
+            toast.success('Logged in successfully')
             navigate('/')
         } catch (err) {
-            setApiError(err instanceof Error ? err.message : 'Login failed')
+            toast.error(err instanceof Error ? err.message : 'Login failed')
         }
     }
 
@@ -39,8 +38,6 @@ export default function Login() {
                 <p className={styles.subtitle}>Sign in to your account</p>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    {apiError && <div className={styles.apiError}>{apiError}</div>}
-
                     <Input
                         label="Email"
                         type="email"

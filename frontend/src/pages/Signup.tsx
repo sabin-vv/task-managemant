@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import { signupSchema, type SignupFormData } from '../schemas/auth.schema'
 import { useAuth } from '../hooks/useAuth'
 import Input from '../shared/components/Input'
@@ -12,7 +12,6 @@ import styles from './Signup.module.css'
 export default function Signup() {
     const { register: registerUser } = useAuth()
     const navigate = useNavigate()
-    const [apiError, setApiError] = useState('')
 
     const {
         register,
@@ -23,12 +22,12 @@ export default function Signup() {
     })
 
     const onSubmit = async (data: SignupFormData) => {
-        setApiError('')
         try {
             await registerUser(data.name, data.email, data.password)
+            toast.success('Account created successfully')
             navigate('/')
         } catch (err) {
-            setApiError(err instanceof Error ? err.message : 'Registration failed')
+            toast.error(err instanceof Error ? err.message : 'Registration failed')
         }
     }
 
@@ -39,8 +38,6 @@ export default function Signup() {
                 <p className={styles.subtitle}>Sign up to get started</p>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    {apiError && <div className={styles.apiError}>{apiError}</div>}
-
                     <Input
                         label="Name"
                         type="text"
