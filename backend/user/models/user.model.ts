@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import type { IUser } from '../../types/user.types'
+import type { IUser } from '../types/user.types'
 
 const userSchema = new Schema<IUser>(
     {
@@ -8,7 +8,7 @@ const userSchema = new Schema<IUser>(
         email: { type: String, required: true, unique: true, lowercase: true, trim: true },
         password: { type: String, required: true, minlength: 6 },
     },
-    { timestamps: true }
+    { timestamps: true },
 )
 
 userSchema.pre('save', async function () {

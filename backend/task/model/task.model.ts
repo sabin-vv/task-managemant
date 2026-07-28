@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
-import type { ITask } from '../../types/task.types'
+import type { ITask } from '../types/task.types'
 
 const taskSchema = new Schema<ITask>(
     {
@@ -10,9 +10,10 @@ const taskSchema = new Schema<ITask>(
             enum: ['pending', 'in-progress', 'completed'],
             default: 'pending',
         },
+        dueDate: { type: Date },
         user: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     },
-    { timestamps: true }
+    { timestamps: true },
 )
 
 export default mongoose.model<ITask>('Task', taskSchema)

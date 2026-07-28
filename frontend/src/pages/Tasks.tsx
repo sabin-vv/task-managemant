@@ -86,6 +86,9 @@ export default function Tasks() {
                 <h1>Tasks</h1>
                 <div className={styles.userInfo}>
                     {user?.name}
+                    <button className={styles.logoutBtn} onClick={() => navigate('/stats')}>
+                        Stats
+                    </button>
                     <button className={styles.logoutBtn} onClick={handleLogout}>
                         Log out
                     </button>

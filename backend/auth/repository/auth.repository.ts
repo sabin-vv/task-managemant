@@ -1,5 +1,5 @@
 import type { IAuthRepository } from '../interfaces/auth.repository.interface'
-import type { IUser } from '../../types/user.types'
+import type { IUser } from '../../user/types/user.types'
 import User from '../../user/models/user.model'
 
 export class AuthRepository implements IAuthRepository {

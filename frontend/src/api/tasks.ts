@@ -5,9 +5,18 @@ export interface Task {
     title: string
     description?: string
     status: 'pending' | 'in-progress' | 'completed'
+    dueDate?: string
     user: string
     createdAt: string
     updatedAt: string
+}
+
+export interface TaskStats {
+    total: number
+    pending: number
+    inProgress: number
+    completed: number
+    overdue: number
 }
 
 function getHeaders() {
@@ -24,7 +33,13 @@ export async function fetchTasks(): Promise<Task[]> {
     return res.json()
 }
 
-export async function createTask(data: { title: string; description?: string; status?: string }): Promise<Task> {
+export async function fetchStats(): Promise<TaskStats> {
+    const res = await fetch(`${API_URL}/stats`, { headers: getHeaders() })
+    if (!res.ok) throw new Error('Failed to fetch stats')
+    return res.json()
+}
+
+export async function createTask(data: { title: string; description?: string; status?: string; dueDate?: string }): Promise<Task> {
     const res = await fetch(API_URL, {
         method: 'POST',
         headers: getHeaders(),
