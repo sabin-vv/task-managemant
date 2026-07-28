@@ -223,6 +223,18 @@
     margin-top: 0.15rem;
 }
 
+.taskDesc {
+    font-size: 0.8rem;
+    color: var(--text);
+    margin-top: 0.4rem;
+    padding: 0.35rem 0.5rem;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent-border);
+    border-radius: 0 4px 4px 0;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
 .editBtn {
     background: none;
     border: none;

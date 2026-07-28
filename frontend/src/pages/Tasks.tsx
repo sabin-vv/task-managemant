@@ -273,6 +273,7 @@ export default function Tasks() {
                                     {statusLabel[task.status]}
                                 </span>
                             </div>
+                            {task.description && <div className={styles.taskDesc}>{task.description}</div>}
                             <div className={styles.taskDate}>{formatDate(task.createdAt)}</div>
                         </div>
 
