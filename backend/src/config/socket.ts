@@ -2,6 +2,7 @@ import { Server as HTTPServer } from 'http'
 import { Server } from 'socket.io'
 import jwt from 'jsonwebtoken'
 import * as cookie from 'cookie'
+import { AppError } from '../errors/AppError'
 import { env } from './env'
 
 let io: Server | null = null
@@ -9,7 +10,7 @@ let io: Server | null = null
 export function initSocket(httpServer: HTTPServer) {
     io = new Server(httpServer, {
         cors: {
-            origin: ['http://localhost:5173', 'http://localhost:4173'],
+            origin: ['http://localhost:5173'],
             methods: ['GET', 'POST'],
             credentials: true,
         },
@@ -18,14 +19,14 @@ export function initSocket(httpServer: HTTPServer) {
     io.use((socket, next) => {
         const token = socket.handshake.auth?.token || cookie.parseCookie(socket.handshake.headers.cookie || '')?.token
         if (!token) {
-            return next(new Error('Authentication required'))
+            return next(new AppError('Authentication required', 401))
         }
         try {
             const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string }
             socket.data.userId = decoded.userId
             next()
         } catch {
-            next(new Error('Invalid token'))
+            next(new AppError('Invalid token', 401))
         }
     })
 
