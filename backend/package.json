@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node --import tsx --env-file=.env src/server.ts",
+        "build": "tsc",
+        "start": "node --import tsx src/server.ts",
         "dev": "node --import tsx --watch --env-file=.env src/server.ts"
     },
     "keywords": [],
@@ -31,6 +32,6 @@
         "@types/jsonwebtoken": "^9.0.10",
         "@types/node": "^26.1.1",
         "tsx": "^4.19.2",
-        "typescript": "^7.0.2"
+        "typescript": "~5.8.3"
     }
 }
