@@ -1,7 +1,4 @@
-import { API_BASE } from './config'
-const API_URL = `${API_BASE}/api/tasks`
-
-const creds = { credentials: 'include' as const, headers: { 'Content-Type': 'application/json' } }
+import api from './axios'
 
 export interface Task {
     _id: string
@@ -22,41 +19,25 @@ export interface TaskStats {
 }
 
 export async function fetchTasks(): Promise<Task[]> {
-    const res = await fetch(API_URL, creds)
-    if (!res.ok) throw new Error('Failed to fetch tasks')
-    return res.json()
+    const { data } = await api.get('/api/tasks')
+    return data
 }
 
 export async function fetchStats(): Promise<TaskStats> {
-    const res = await fetch(`${API_URL}/stats`, creds)
-    if (!res.ok) throw new Error('Failed to fetch stats')
-    return res.json()
+    const { data } = await api.get('/api/tasks/stats')
+    return data
 }
 
-export async function createTask(data: { title: string; description?: string; dueDate?: string }): Promise<Task> {
-    const res = await fetch(API_URL, {
-        method: 'POST',
-        ...creds,
-        body: JSON.stringify(data),
-    })
-    if (!res.ok) throw new Error('Failed to create task')
-    return res.json()
+export async function createTask(body: { title: string; description?: string; dueDate?: string }): Promise<Task> {
+    const { data } = await api.post('/api/tasks', body)
+    return data
 }
 
-export async function updateTask(id: string, data: Partial<Task>): Promise<Task> {
-    const res = await fetch(`${API_URL}/${id}`, {
-        method: 'PUT',
-        ...creds,
-        body: JSON.stringify(data),
-    })
-    if (!res.ok) throw new Error('Failed to update task')
-    return res.json()
+export async function updateTask(id: string, body: Partial<Task>): Promise<Task> {
+    const { data } = await api.put(`/api/tasks/${id}`, body)
+    return data
 }
 
 export async function deleteTask(id: string): Promise<void> {
-    const res = await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE',
-        ...creds,
-    })
-    if (!res.ok) throw new Error('Failed to delete task')
+    await api.delete(`/api/tasks/${id}`)
 }
