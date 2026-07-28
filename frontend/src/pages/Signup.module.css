@@ -10,27 +10,27 @@
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 2.5rem;
+    padding: 1.5rem;
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
     box-shadow: var(--shadow);
 }
 
 .title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     color: var(--text-h);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
 }
 
 .subtitle {
     color: var(--text);
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
 }
 
 .footer {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
+    margin-top: 0.85rem;
+    font-size: 0.85rem;
     color: var(--text);
 }
 

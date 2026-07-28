@@ -1,5 +1,5 @@
 import { type InputHTMLAttributes, forwardRef, useState } from 'react'
-import styles from './Input.module.css'
+import fieldStyles from './Field.module.css'
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
     label: string
@@ -10,39 +10,25 @@ const PasswordField = forwardRef<HTMLInputElement, Props>(({ label, error, class
     const [visible, setVisible] = useState(false)
 
     return (
-        <div className={styles.group}>
-            <label className={styles.label}>{label}</label>
-            <div style={{ position: 'relative' }}>
+        <div className={fieldStyles.group}>
+            <label className={fieldStyles.label}>{label}</label>
+            <div className={fieldStyles.wrapper}>
                 <input
                     ref={ref}
                     type={visible ? 'text' : 'password'}
-                    className={`${styles.input} ${className ?? ''}`}
-                    style={{ paddingRight: '2.75rem' }}
+                    className={`${fieldStyles.input} ${className ?? ''}`}
                     {...rest}
                 />
                 <button
                     type="button"
+                    className={fieldStyles.toggle}
                     onClick={() => setVisible((v) => !v)}
-                    style={{
-                        position: 'absolute',
-                        right: '0.5rem',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: 'var(--text)',
-                        fontSize: '0.8rem',
-                        fontWeight: 500,
-                        padding: '0.25rem 0.4rem',
-                        fontFamily: 'inherit',
-                    }}
                     tabIndex={-1}
                 >
                     {visible ? 'Hide' : 'Show'}
                 </button>
             </div>
-            {error && <span className={styles.error}>{error}</span>}
+            {error && <span className={fieldStyles.error}>{error}</span>}
         </div>
     )
 })
