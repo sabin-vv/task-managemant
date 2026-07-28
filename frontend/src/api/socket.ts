@@ -4,11 +4,11 @@ const SOCKET_URL = 'http://localhost:3000'
 
 let socket: Socket | null = null
 
-export function connectSocket(token: string) {
+export function connectSocket() {
     if (socket?.connected) return socket
 
     socket = io(SOCKET_URL, {
-        auth: { token },
+        withCredentials: true,
         transports: ['websocket', 'polling'],
     })
 

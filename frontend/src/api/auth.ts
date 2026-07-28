@@ -1,7 +1,8 @@
 const API_URL = 'http://localhost:3000/api/auth'
 
+const creds = { credentials: 'include' as const }
+
 export interface AuthResponse {
-    token: string
     user: { id: string; name: string; email: string }
 }
 
@@ -10,6 +11,7 @@ export async function loginUser(email: string, password: string): Promise<AuthRe
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
+        ...creds,
     })
 
     if (!res.ok) {
@@ -29,6 +31,7 @@ export async function registerUser(
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
+        ...creds,
     })
 
     if (!res.ok) {
@@ -37,4 +40,17 @@ export async function registerUser(
     }
 
     return res.json()
+}
+
+export async function fetchMe(): Promise<AuthResponse> {
+    const res = await fetch(`${API_URL}/me`, { ...creds })
+    if (!res.ok) throw new Error('Not authenticated')
+    return res.json()
+}
+
+export async function logoutUser(): Promise<void> {
+    await fetch(`${API_URL}/logout`, {
+        method: 'POST',
+        ...creds,
+    })
 }

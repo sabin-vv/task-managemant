@@ -11,10 +11,8 @@ export class AuthService implements IAuthService {
         if (existing) throw new Error('Email already registered')
 
         const user = await this.repo.create({ name, email, password })
-        const token = jwt.sign({ userId: user._id }, env.JWT_SECRET, { expiresIn: '7d' })
 
         return {
-            token,
             user: { id: user._id.toString(), name: user.name, email: user.email },
         }
     }
@@ -26,10 +24,16 @@ export class AuthService implements IAuthService {
         const isMatch = await user.comparePassword(password)
         if (!isMatch) throw new Error('Invalid email or password')
 
-        const token = jwt.sign({ userId: user._id }, env.JWT_SECRET, { expiresIn: '7d' })
+        return {
+            user: { id: user._id.toString(), name: user.name, email: user.email },
+        }
+    }
+
+    async me(userId: string): Promise<AuthResult> {
+        const user = await this.repo.findById(userId)
+        if (!user) throw new Error('User not found')
 
         return {
-            token,
             user: { id: user._id.toString(), name: user.name, email: user.email },
         }
     }

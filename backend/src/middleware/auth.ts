@@ -11,13 +11,12 @@ interface JwtPayload {
 }
 
 export function authenticate(req: AuthRequest, res: Response, next: NextFunction) {
-    const header = req.headers.authorization
-    if (!header || !header.startsWith('Bearer ')) {
+    const token = req.cookies?.token || req.headers.authorization?.replace('Bearer ', '')
+
+    if (!token) {
         res.status(401).json({ message: 'Authentication required' })
         return
     }
-
-    const token = header.split(' ')[1]
 
     try {
         const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload

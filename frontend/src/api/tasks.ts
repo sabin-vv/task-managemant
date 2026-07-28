@@ -1,5 +1,7 @@
 const API_URL = 'http://localhost:3000/api/tasks'
 
+const creds = { credentials: 'include' as const, headers: { 'Content-Type': 'application/json' } }
+
 export interface Task {
     _id: string
     title: string
@@ -19,22 +21,14 @@ export interface TaskStats {
     overdue: number
 }
 
-function getHeaders() {
-    const token = localStorage.getItem('token')
-    return {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    }
-}
-
 export async function fetchTasks(): Promise<Task[]> {
-    const res = await fetch(API_URL, { headers: getHeaders() })
+    const res = await fetch(API_URL, creds)
     if (!res.ok) throw new Error('Failed to fetch tasks')
     return res.json()
 }
 
 export async function fetchStats(): Promise<TaskStats> {
-    const res = await fetch(`${API_URL}/stats`, { headers: getHeaders() })
+    const res = await fetch(`${API_URL}/stats`, creds)
     if (!res.ok) throw new Error('Failed to fetch stats')
     return res.json()
 }
@@ -42,7 +36,7 @@ export async function fetchStats(): Promise<TaskStats> {
 export async function createTask(data: { title: string; description?: string; status?: string; dueDate?: string }): Promise<Task> {
     const res = await fetch(API_URL, {
         method: 'POST',
-        headers: getHeaders(),
+        ...creds,
         body: JSON.stringify(data),
     })
     if (!res.ok) throw new Error('Failed to create task')
@@ -52,7 +46,7 @@ export async function createTask(data: { title: string; description?: string; st
 export async function updateTask(id: string, data: Partial<Task>): Promise<Task> {
     const res = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
-        headers: getHeaders(),
+        ...creds,
         body: JSON.stringify(data),
     })
     if (!res.ok) throw new Error('Failed to update task')
@@ -62,7 +56,7 @@ export async function updateTask(id: string, data: Partial<Task>): Promise<Task>
 export async function deleteTask(id: string): Promise<void> {
     const res = await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
-        headers: getHeaders(),
+        ...creds,
     })
     if (!res.ok) throw new Error('Failed to delete task')
 }

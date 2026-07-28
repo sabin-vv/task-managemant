@@ -1,6 +1,7 @@
 import { Server as HTTPServer } from 'http'
 import { Server } from 'socket.io'
 import jwt from 'jsonwebtoken'
+import * as cookie from 'cookie'
 import { env } from './env'
 
 let io: Server | null = null
@@ -10,11 +11,12 @@ export function initSocket(httpServer: HTTPServer) {
         cors: {
             origin: ['http://localhost:5173', 'http://localhost:4173'],
             methods: ['GET', 'POST'],
+            credentials: true,
         },
     })
 
     io.use((socket, next) => {
-        const token = socket.handshake.auth?.token
+        const token = socket.handshake.auth?.token || cookie.parseCookie(socket.handshake.headers.cookie || '')?.token
         if (!token) {
             return next(new Error('Authentication required'))
         }

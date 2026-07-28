@@ -7,6 +7,10 @@ export class AuthRepository implements IAuthRepository {
         return User.findOne({ email })
     }
 
+    async findById(id: string): Promise<IUser | null> {
+        return User.findById(id)
+    }
+
     async create(data: { name: string; email: string; password: string }): Promise<IUser> {
         return User.create(data)
     }

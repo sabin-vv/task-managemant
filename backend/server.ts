@@ -1,4 +1,6 @@
 import express from 'express'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import { createServer } from 'http'
 import { connectDB } from './src/config/db'
 import { env } from './src/config/env'
@@ -13,7 +15,12 @@ connectDB()
 
 initSocket(httpServer)
 
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:4173'],
+    credentials: true,
+}))
 app.use(express.json())
+app.use(cookieParser())
 app.use('/api/auth', authRoutes)
 app.use('/api/tasks', taskRoutes)
 
