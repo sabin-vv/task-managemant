@@ -1,7 +1,7 @@
 import type { IAuthRepository } from '../interfaces/auth.repository.interface'
-import type { IUser } from '../../user/types/user.types'
-import User from '../../user/models/user.model'
-import { BaseRepository } from '../../../repositories/BaseRepository'
+import type { IUser } from '../types/user.types'
+import User from '../models/user.model'
+import { BaseRepository } from '../../../config/BaseRepository'
 
 export class AuthRepository extends BaseRepository<IUser> implements IAuthRepository {
     constructor() {

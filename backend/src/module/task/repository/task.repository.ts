@@ -1,7 +1,7 @@
 import type { ITaskRepository, TaskStatsResult } from '../interfaces/task.repository.interface'
 import type { ITask } from '../types/task.types'
 import Task from '../model/task.model'
-import { BaseRepository } from '../../../repositories/BaseRepository'
+import { BaseRepository } from '../../../config/BaseRepository'
 
 export class TaskRepository extends BaseRepository<ITask> implements ITaskRepository {
     constructor() {

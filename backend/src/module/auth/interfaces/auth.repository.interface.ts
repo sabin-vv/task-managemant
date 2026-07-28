@@ -1,4 +1,4 @@
-import type { IUser } from '../../user/types/user.types'
+import type { IUser } from '../types/user.types'
 
 export interface IAuthRepository {
     findByEmail(email: string): Promise<IUser | null>
