@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 import { Pencil } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useAuth } from '../hooks/useAuth'
@@ -36,10 +36,9 @@ export default function Tasks() {
     const [formDueDate, setFormDueDate] = useState('')
 
     useEffect(() => {
-        fetchTasks()
-            .then(setTasks)
-            .catch(() => navigate('/login'))
-    }, [navigate])
+        if (!user) return
+        fetchTasks().then(setTasks).catch(() => {})
+    }, [user])
 
     useEffect(() => {
         const socket = getSocket()
@@ -208,6 +207,8 @@ export default function Tasks() {
     const filtered = tasks.filter(
         (t) => t.title.toLowerCase().includes(q) || (t.description?.toLowerCase() ?? '').includes(q),
     )
+
+    if (!user) return <Navigate to="/login" replace />
 
     return (
         <div className={styles.container}>
