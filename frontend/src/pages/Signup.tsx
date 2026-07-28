@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, Navigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { signupSchema, type SignupFormData } from '../schemas/auth.schema'
 import { useAuth } from '../hooks/useAuth'
@@ -10,7 +10,7 @@ import Button from '../shared/components/Button'
 import styles from './Signup.module.css'
 
 export default function Signup() {
-    const { register: registerUser } = useAuth()
+    const { user, register: registerUser } = useAuth()
     const navigate = useNavigate()
 
     const {
@@ -30,6 +30,8 @@ export default function Signup() {
             toast.error(err instanceof Error ? err.message : 'Registration failed')
         }
     }
+
+    if (user) return <Navigate to="/" replace />
 
     return (
         <div className={styles.container}>
