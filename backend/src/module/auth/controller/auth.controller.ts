@@ -3,8 +3,9 @@ import type { IAuthService } from '../interfaces/auth.service.interface'
 import type { AuthRequest } from '../../../middleware/auth'
 import { env } from '../../../config/env'
 import { HTTP_STATUS } from '../../../constants/http-status'
-import { AUTH_MESSAGES } from '../../../constants/messages'
+import { AUTH_MESSAGES, RESPONSE_MESSAGES } from '../../../constants/messages'
 import { ResponseHelper } from '../../../utils/ResponseHelper'
+import { AppError } from '../../../errors/AppError'
 import { signRefreshToken, verifyToken } from '../../../config/token'
 
 export class AuthController {
@@ -26,7 +27,7 @@ export class AuthController {
         const { name, email, password } = req.body
         const result = await this.authService.register(name, email, password)
         this.setRefreshCookie(res, result.user.id)
-        ResponseHelper.success(res, { user: result.user, accessToken: result.accessToken }, HTTP_STATUS.CREATED)
+        ResponseHelper.success(res, { user: result.user, accessToken: result.accessToken }, RESPONSE_MESSAGES.SUCCESS, HTTP_STATUS.CREATED)
     }
 
     async login(req: Request, res: Response) {
@@ -44,17 +45,12 @@ export class AuthController {
     async refresh(req: Request, res: Response) {
         const token = req.cookies?.refreshToken
         if (!token) {
-            ResponseHelper.error(res, AUTH_MESSAGES.AUTH_REQUIRED, HTTP_STATUS.UNAUTHORIZED)
-            return
+            throw new AppError(AUTH_MESSAGES.AUTH_REQUIRED, HTTP_STATUS.UNAUTHORIZED)
         }
 
-        try {
-            const { userId } = verifyToken(token)
-            const result = await this.authService.refreshToken(userId)
-            ResponseHelper.success(res, result)
-        } catch {
-            ResponseHelper.error(res, AUTH_MESSAGES.INVALID_TOKEN, HTTP_STATUS.UNAUTHORIZED)
-        }
+        const { userId } = verifyToken(token)
+        const result = await this.authService.refreshToken(userId)
+        ResponseHelper.success(res, result)
     }
 
     async logout(_req: Request, res: Response) {
