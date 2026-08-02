@@ -1,3 +1,22 @@
+export const TASK_MESSAGES = {
+    FETCH_STATS_FAILED: 'Failed to fetch stats',
+    FETCH_TASKS_FAILED: 'Failed to fetch tasks',
+    CREATE_FAILED: 'Failed to create task',
+    UPDATE_FAILED: 'Failed to update task',
+    DELETE_FAILED: 'Failed to delete task',
+    NOT_FOUND: 'Task not found',
+    DELETED: 'Task deleted',
+} as const
+
+export const RESPONSE_MESSAGES = {
+    SUCCESS: 'Success',
+    CREATED: 'Created',
+    FAILED: 'Failed',
+    NOT_FOUND: 'Not found',
+    UNAUTHORIZED: 'Unauthorized',
+    INTERNAL_SERVER_ERROR: 'Internal server error',
+} as const
+
 export const AUTH_MESSAGES = {
     REGISTRATION_FAILED: 'Registration failed',
     LOGIN_FAILED: 'Login failed',
