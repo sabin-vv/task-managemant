@@ -28,11 +28,17 @@ function processQueue(error: unknown, token: string | null = null) {
 }
 
 api.interceptors.response.use(
-    (res) => res,
+    (res) => {
+        const d = res.data
+        if (d && typeof d === 'object' && 'success' in d && 'message' in d && 'data' in d) {
+            return { ...res, data: d.data }
+        }
+        return res
+    },
     async (err) => {
         const originalRequest = err.config
 
-        if (err.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh')) {
+        if (err.response?.status === 401 && originalRequest && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh')) {
             if (isRefreshing) {
                 return new Promise<string>((resolve, reject) => {
                     failedQueue.push({ resolve, reject })
@@ -46,7 +52,7 @@ api.interceptors.response.use(
             isRefreshing = true
 
             try {
-                const { data } = await axios.post(`${API_BASE}/api/auth/refresh`, {}, { withCredentials: true })
+                const { data } = await api.post('/auth/refresh')
                 setAccessToken(data.accessToken)
                 processQueue(null, data.accessToken)
                 originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
