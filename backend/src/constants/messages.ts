@@ -13,7 +13,12 @@ export const RESPONSE_MESSAGES = {
     CREATED: 'Created',
     FAILED: 'Failed',
     NOT_FOUND: 'Not found',
+    BAD_REQUEST: 'Bad request',
+    VALIDATION_FAILED: 'Validation failed',
+    CONFLICT: 'Conflict',
     UNAUTHORIZED: 'Unauthorized',
+    TOKEN_EXPIRED: 'Token expired',
+    INVALID_TOKEN: 'Invalid token',
     INTERNAL_SERVER_ERROR: 'Internal server error',
 } as const
 
