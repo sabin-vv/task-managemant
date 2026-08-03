@@ -2,11 +2,11 @@ import jwt from 'jsonwebtoken'
 import { env } from './env'
 
 export function signAccessToken(userId: string): string {
-    return jwt.sign({ userId }, env.JWT_SECRET, { expiresIn: '15m' })
+    return jwt.sign({ userId }, env.JWT_SECRET, { expiresIn: env.ACCESS_TOKEN_EXPIRY })
 }
 
 export function signRefreshToken(userId: string): string {
-    return jwt.sign({ userId }, env.JWT_SECRET, { expiresIn: '7d' })
+    return jwt.sign({ userId }, env.JWT_SECRET, { expiresIn: env.REFRESH_TOKEN_EXPIRY })
 }
 
 export function verifyToken(token: string): { userId: string } {

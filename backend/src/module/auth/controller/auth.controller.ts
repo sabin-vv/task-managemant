@@ -18,7 +18,7 @@ export class AuthController {
             httpOnly: true,
             secure: isProd,
             sameSite: isProd ? 'none' : 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: env.REFRESH_COOKIE_MAX_AGE,
             path: '/api/auth',
         })
     }
