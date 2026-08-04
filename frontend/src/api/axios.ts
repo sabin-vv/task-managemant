@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { API_BASE } from './config'
+import { AUTH_API } from '../constants/routes.constants'
 import { getAccessToken, setAccessToken } from './token'
 
 const api = axios.create({
@@ -38,7 +39,7 @@ api.interceptors.response.use(
     async (err) => {
         const originalRequest = err.config
 
-        if (err.response?.status === 401 && originalRequest && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh')) {
+        if (err.response?.status === 401 && originalRequest && !originalRequest._retry && !originalRequest.url?.includes(AUTH_API.REFRESH)) {
             if (isRefreshing) {
                 return new Promise<string>((resolve, reject) => {
                     failedQueue.push({ resolve, reject })
@@ -52,7 +53,7 @@ api.interceptors.response.use(
             isRefreshing = true
 
             try {
-                const { data } = await api.post('/auth/refresh')
+                const { data } = await api.post(AUTH_API.REFRESH)
                 setAccessToken(data.accessToken)
                 processQueue(null, data.accessToken)
                 originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
