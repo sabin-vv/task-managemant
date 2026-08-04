@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
-import { Pencil } from 'lucide-react'
+import { BarChart3, LogOut, Pencil, User } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useAuth } from '../hooks/useAuth'
 import { useSocket } from '../hooks/useSocket'
@@ -14,7 +14,6 @@ const TITLE_REGEX = /^[a-zA-Z0-9 ]+$/
 
 const statusLabel: Record<string, string> = {
     pending: 'Pending',
-    'in-progress': 'In Progress',
     completed: 'Completed',
 }
 
@@ -37,7 +36,9 @@ export default function Tasks() {
 
     useEffect(() => {
         if (!user) return
-        fetchTasks().then(setTasks).catch(() => {})
+        fetchTasks()
+            .then(setTasks)
+            .catch(() => {})
     }, [user])
 
     useEffect(() => {
@@ -123,17 +124,20 @@ export default function Tasks() {
         }
     }, [])
 
-    const handleDelete = useCallback(async (id: string) => {
-        const prev = tasks
-        setTasks((p) => p.filter((t) => t._id !== id))
-        try {
-            await deleteTask(id)
-            toast.success('Task deleted')
-        } catch {
-            toast.error('Failed to delete task')
-            setTasks(prev)
-        }
-    }, [tasks])
+    const handleDelete = useCallback(
+        async (id: string) => {
+            const prev = tasks
+            setTasks((p) => p.filter((t) => t._id !== id))
+            try {
+                await deleteTask(id)
+                toast.success('Task deleted')
+            } catch {
+                toast.error('Failed to delete task')
+                setTasks(prev)
+            }
+        },
+        [tasks],
+    )
 
     const startEditing = (task: Task) => {
         setEditingId(task._id)
@@ -213,13 +217,21 @@ export default function Tasks() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>Tasks</h1>
+                <div className={styles.titleGroup}>
+                    <span className={styles.eyebrow}>Workspace</span>
+                    <h1>My tasks</h1>
+                    <p>Keep your day organised and your priorities clear.</p>
+                </div>
                 <div className={styles.userInfo}>
-                    {user?.name}
-                    <button className={styles.logoutBtn} onClick={() => navigate('/stats')}>
-                        Stats
+                    <span className={styles.userName}>
+                        <User size={16} /> {user?.name}
+                    </span>
+                    <button className={styles.statsBtn} onClick={() => navigate('/stats')}>
+                        <BarChart3 size={16} aria-hidden="true" />
+                        Statistics
                     </button>
                     <button className={styles.logoutBtn} onClick={handleLogout}>
+                        <LogOut size={16} aria-hidden="true" />
                         Log out
                     </button>
                 </div>
@@ -327,7 +339,7 @@ export default function Tasks() {
                                     </div>
                                 )}
                                 <span
-                                    className={`${styles.statusBadge} ${task.status === 'pending' ? styles.statusPending : task.status === 'in-progress' ? styles.statusInProgress : styles.statusCompleted}`}
+                                    className={`${styles.statusBadge} ${task.status === 'completed' ? styles.statusCompleted : styles.statusPending}`}
                                 >
                                     {statusLabel[task.status]}
                                 </span>
@@ -335,7 +347,9 @@ export default function Tasks() {
                             {task.description && <div className={styles.taskDesc}>{task.description}</div>}
                             <div className={styles.taskDates}>
                                 <span className={styles.taskDate}>Created: {formatDate(task.createdAt)}</span>
-                                {task.dueDate && <span className={styles.taskDate}>Due: {formatDateOnly(task.dueDate)}</span>}
+                                {task.dueDate && (
+                                    <span className={styles.taskDate}>Due: {formatDateOnly(task.dueDate)}</span>
+                                )}
                             </div>
                         </div>
 

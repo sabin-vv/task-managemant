@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ListTodo, User } from 'lucide-react'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { fetchStats, type TaskStats } from '../api/tasks'
 import { useAuth } from '../hooks/useAuth'
@@ -38,12 +39,17 @@ export default function Stats() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>Task Statistics</h1>
-                <div>
-                    <span style={{ color: 'var(--text)', fontSize: '0.85rem', marginRight: '0.75rem' }}>
-                        {user?.name}
+                <div className={styles.titleGroup}>
+                    <span className={styles.eyebrow}>Workspace insights</span>
+                    <h1>Task statistics</h1>
+                    <p>A quick overview of your current progress.</p>
+                </div>
+                <div className={styles.userInfo}>
+                    <span className={styles.userName}>
+                        <User size={16} /> {user?.name}
                     </span>
                     <button className={styles.backBtn} onClick={() => navigate('/')}>
+                        <ListTodo size={16} aria-hidden="true" />
                         Back to Tasks
                     </button>
                 </div>
