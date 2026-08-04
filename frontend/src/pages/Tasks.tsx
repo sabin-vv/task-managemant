@@ -4,11 +4,12 @@ import { BarChart3, LogOut, Pencil, User } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useAuth } from '../hooks/useAuth'
 import { useSocket } from '../hooks/useSocket'
-import { fetchTasks, createTask, updateTask, deleteTask, type Task } from '../api/tasks'
+import { fetchTasks, createTask, updateTask, deleteTask } from '../api/tasks'
 import { getSocket } from '../api/socket'
 import Modal from '../shared/components/Modal'
 import SearchBar from '../shared/components/SearchBar'
 import styles from './Tasks.module.css'
+import type { Task } from '../shared/types/types'
 
 const TITLE_REGEX = /^[a-zA-Z0-9 ]+$/
 

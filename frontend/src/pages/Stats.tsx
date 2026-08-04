@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ListTodo, User } from 'lucide-react'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { fetchStats, type TaskStats } from '../api/tasks'
+import { fetchStats } from '../api/tasks'
 import { useAuth } from '../hooks/useAuth'
 import styles from './Stats.module.css'
+import type { TaskStats } from '../shared/types/types'
 
 const STATUS_COLORS: Record<string, string> = {
     pending: '#f59e0b',
@@ -66,7 +67,7 @@ export default function Stats() {
                             <div className={styles.cardLabel}>Pending</div>
                             <div className={styles.cardValue}>{stats.pending}</div>
                         </div>
-                        
+
                         <div className={styles.card}>
                             <div className={styles.cardLabel}>Completed</div>
                             <div className={styles.cardValue}>{stats.completed}</div>
@@ -84,12 +85,17 @@ export default function Stats() {
                             <div className={styles.chartTitle}>Status Distribution</div>
                             <ResponsiveContainer width="100%" height={260}>
                                 <PieChart>
-                                    <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
+                                    <Pie
+                                        data={pieData}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={90}
+                                        label
+                                    >
                                         {pieData.map((entry) => (
-                                            <Cell
-                                                key={entry.name}
-                                                fill={STATUS_COLORS[entry.name.toLowerCase()]}
-                                            />
+                                            <Cell key={entry.name} fill={STATUS_COLORS[entry.name.toLowerCase()]} />
                                         ))}
                                     </Pie>
                                     <Tooltip />
@@ -107,10 +113,7 @@ export default function Stats() {
                                     <Tooltip />
                                     <Bar dataKey="count" radius={[6, 6, 0, 0]}>
                                         {barData.map((entry) => (
-                                            <Cell
-                                                key={entry.name}
-                                                fill={STATUS_COLORS[entry.name.toLowerCase()]}
-                                            />
+                                            <Cell key={entry.name} fill={STATUS_COLORS[entry.name.toLowerCase()]} />
                                         ))}
                                     </Bar>
                                 </BarChart>

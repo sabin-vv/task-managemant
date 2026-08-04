@@ -1,16 +1,4 @@
 import { createContext } from 'react'
-
-export interface User {
-    id: string
-    name: string
-    email: string
-}
-
-export interface AuthContextType {
-    user: User | null
-    login: (email: string, password: string) => Promise<void>
-    register: (name: string, email: string, password: string) => Promise<void>
-    logout: () => void
-}
+import type { AuthContextType } from '../shared/types/types'
 
 export const AuthContext = createContext<AuthContextType | null>(null)

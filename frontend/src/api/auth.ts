@@ -1,10 +1,6 @@
 import api from './axios'
 import { AUTH_API } from '../constants/routes.constants'
-
-export interface AuthResponse {
-    user: { id: string; name: string; email: string }
-    accessToken: string
-}
+import type { AuthResponse } from '../shared/types/types'
 
 export async function loginUser(email: string, password: string): Promise<AuthResponse> {
     const { data } = await api.post(AUTH_API.LOGIN, { email, password })

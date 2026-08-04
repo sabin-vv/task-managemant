@@ -1,23 +1,6 @@
 import api from './axios'
 import { TASK_API } from '../constants/routes.constants'
-
-export interface Task {
-    _id: string
-    title: string
-    description?: string
-    status: 'pending' | 'completed'
-    dueDate?: string
-    user: string
-    createdAt: string
-    updatedAt: string
-}
-
-export interface TaskStats {
-    total: number
-    pending: number
-    completed: number
-    overdue: number
-}
+import type { Task, TaskStats } from '../shared/types/types'
 
 export async function fetchTasks(): Promise<Task[]> {
     const { data } = await api.get(TASK_API.BASE)
