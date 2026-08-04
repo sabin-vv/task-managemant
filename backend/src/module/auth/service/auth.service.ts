@@ -3,7 +3,7 @@ import type { IAuthRepository } from '../interfaces/auth.repository.interface'
 import { AUTH_MESSAGES } from '../../../constants/messages'
 import { HTTP_STATUS } from '../../../constants/http-status'
 import { AppError } from '../../../errors/AppError'
-import { signAccessToken, signRefreshToken, verifyToken } from '../../../config/token'
+import { signAccessToken } from '../../../config/token'
 
 export class AuthService implements IAuthService {
     constructor(private readonly _repo: IAuthRepository) {}

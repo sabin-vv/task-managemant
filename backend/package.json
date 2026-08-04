@@ -6,6 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "tsc",
+        "lint": "eslint .",
         "start": "node --import tsx src/server.ts",
         "dev": "node --import tsx --watch --env-file=.env src/server.ts"
     },
@@ -24,6 +25,7 @@
         "socket.io": "^4.8.3"
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
         "@types/bcryptjs": "^2.4.6",
         "@types/cookie": "^0.6.0",
         "@types/cookie-parser": "^1.4.10",
@@ -31,7 +33,11 @@
         "@types/express": "^5.0.6",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/node": "^26.1.1",
+        "@typescript-eslint/eslint-plugin": "^8.66.0",
+        "eslint": "^10.8.0",
+        "globals": "^17.9.0",
         "tsx": "^4.19.2",
-        "typescript": "~5.8.3"
+        "typescript": "~5.8.3",
+        "typescript-eslint": "^8.66.0"
     }
 }
