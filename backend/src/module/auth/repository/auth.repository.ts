@@ -15,4 +15,8 @@ export class AuthRepository extends BaseRepository<IUser> implements IAuthReposi
     async findByEmail(email: string): Promise<IUser | null> {
         return this.findOne({ email })
     }
+
+    async create(data: { name: string; email: string; password: string }): Promise<IUser> {
+        return this.model.create(data)
+    }
 }

@@ -5,7 +5,6 @@ import { getIO } from '../../../config/socket'
 import { HTTP_STATUS } from '../../../constants/http-status'
 import { TASK_MESSAGES } from '../../../constants/messages'
 import { AppError } from '../../../errors/AppError'
-import mongoose from 'mongoose'
 
 export class TaskService implements ITaskService {
     constructor(private readonly _repo: ITaskRepository) {}
@@ -23,7 +22,7 @@ export class TaskService implements ITaskService {
             description: data.description,
             status: data.status as ITask['status'],
             dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
-            user: new mongoose.Types.ObjectId(userId),
+            user: userId,
         })
         getIO().to(userId).emit('task:created', task)
         return task

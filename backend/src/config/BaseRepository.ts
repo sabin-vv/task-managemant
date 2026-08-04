@@ -3,10 +3,6 @@ import { type Model, type Document } from 'mongoose'
 export class BaseRepository<T extends Document> {
     constructor(protected readonly model: Model<T>) {}
 
-    async create(data: Partial<T>): Promise<T> {
-        return this.model.create(data)
-    }
-
     async findOne(filter: Record<string, unknown>): Promise<T | null> {
         return this.model.findOne(filter)
     }

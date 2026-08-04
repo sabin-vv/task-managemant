@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import type { ITaskRepository, TaskStatsResult } from '../interfaces/task.repository.interface'
+import type { ITaskRepository, TaskStatsResult, CreateTaskData } from '../interfaces/task.repository.interface'
 import type { ITask } from '../types/task.types'
 import Task from '../model/task.model'
 import { BaseRepository } from '../../../config/BaseRepository'
@@ -15,6 +15,10 @@ export class TaskRepository extends BaseRepository<ITask> implements ITaskReposi
 
     async findById(id: string, userId: string): Promise<ITask | null> {
         return this.findOne({ _id: id, user: userId })
+    }
+
+    async create(data: CreateTaskData): Promise<ITask> {
+        return this.model.create({ ...data, user: new mongoose.Types.ObjectId(data.user) })
     }
 
     async update(id: string, userId: string, data: Partial<ITask>): Promise<ITask | null> {
