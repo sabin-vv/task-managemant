@@ -7,7 +7,7 @@ import { ResponseHelper } from '../../../utils/ResponseHelper'
 import { AppError } from '../../../errors/AppError'
 
 export class TaskController {
-    constructor(private readonly taskService: ITaskService) {}
+    constructor(private readonly _taskService: ITaskService) {}
 
     private getUserId(req: Request): string {
         const { userId } = req as AuthRequest
@@ -19,32 +19,32 @@ export class TaskController {
 
     async getStats(req: Request, res: Response) {
         const userId = this.getUserId(req)
-        const stats = await this.taskService.getStats(userId)
+        const stats = await this._taskService.getStats(userId)
         ResponseHelper.success(res, stats)
     }
 
     async getAll(req: Request, res: Response) {
         const userId = this.getUserId(req)
-        const tasks = await this.taskService.getAll(userId)
+        const tasks = await this._taskService.getAll(userId)
         ResponseHelper.success(res, tasks)
     }
 
     async create(req: Request, res: Response) {
         const userId = this.getUserId(req)
         const { title, description, status, dueDate } = req.body
-        const task = await this.taskService.create(userId, { title, description, status, dueDate })
+        const task = await this._taskService.create(userId, { title, description, status, dueDate })
         ResponseHelper.success(res, task, RESPONSE_MESSAGES.CREATED, HTTP_STATUS.CREATED)
     }
 
     async update(req: Request, res: Response) {
         const userId = this.getUserId(req)
-        const task = await this.taskService.update(String(req.params.id), userId, req.body)
+        const task = await this._taskService.update(String(req.params.id), userId, req.body)
         ResponseHelper.success(res, task)
     }
 
     async delete(req: Request, res: Response) {
         const userId = this.getUserId(req)
-        await this.taskService.delete(String(req.params.id), userId)
+        await this._taskService.delete(String(req.params.id), userId)
         ResponseHelper.success(res, null, TASK_MESSAGES.DELETED)
     }
 }

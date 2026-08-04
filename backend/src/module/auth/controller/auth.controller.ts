@@ -9,7 +9,7 @@ import { AppError } from '../../../errors/AppError'
 import { signRefreshToken, verifyToken } from '../../../config/token'
 
 export class AuthController {
-    constructor(private readonly authService: IAuthService) {}
+    constructor(private readonly _authService: IAuthService) {}
 
     private setRefreshCookie(res: Response, userId: string) {
         const refreshToken = signRefreshToken(userId)
@@ -25,20 +25,20 @@ export class AuthController {
 
     async register(req: Request, res: Response) {
         const { name, email, password } = req.body
-        const result = await this.authService.register(name, email, password)
+        const result = await this._authService.register(name, email, password)
         this.setRefreshCookie(res, result.user.id)
         ResponseHelper.success(res, { user: result.user, accessToken: result.accessToken }, RESPONSE_MESSAGES.SUCCESS, HTTP_STATUS.CREATED)
     }
 
     async login(req: Request, res: Response) {
         const { email, password } = req.body
-        const result = await this.authService.login(email, password)
+        const result = await this._authService.login(email, password)
         this.setRefreshCookie(res, result.user.id)
         ResponseHelper.success(res, { user: result.user, accessToken: result.accessToken })
     }
 
     async me(req: AuthRequest, res: Response) {
-        const result = await this.authService.me(req.userId!)
+        const result = await this._authService.me(req.userId!)
         ResponseHelper.success(res, result)
     }
 
@@ -49,7 +49,7 @@ export class AuthController {
         }
 
         const { userId } = verifyToken(token)
-        const result = await this.authService.refreshToken(userId)
+        const result = await this._authService.refreshToken(userId)
         ResponseHelper.success(res, result)
     }
 

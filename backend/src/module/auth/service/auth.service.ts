@@ -6,13 +6,13 @@ import { AppError } from '../../../errors/AppError'
 import { signAccessToken, signRefreshToken, verifyToken } from '../../../config/token'
 
 export class AuthService implements IAuthService {
-    constructor(private readonly repo: IAuthRepository) {}
+    constructor(private readonly _repo: IAuthRepository) {}
 
     async register(name: string, email: string, password: string): Promise<AuthResult> {
-        const existing = await this.repo.findByEmail(email)
+        const existing = await this._repo.findByEmail(email)
         if (existing) throw new AppError(AUTH_MESSAGES.EMAIL_EXISTS, HTTP_STATUS.BAD_REQUEST)
 
-        const user = await this.repo.create({ name, email, password })
+        const user = await this._repo.create({ name, email, password })
 
         return {
             user: { id: user._id.toString(), name: user.name, email: user.email },
@@ -21,7 +21,7 @@ export class AuthService implements IAuthService {
     }
 
     async login(email: string, password: string): Promise<AuthResult> {
-        const user = await this.repo.findByEmail(email)
+        const user = await this._repo.findByEmail(email)
         if (!user) throw new AppError(AUTH_MESSAGES.INVALID_CREDENTIALS, HTTP_STATUS.UNAUTHORIZED)
 
         const isMatch = await user.comparePassword(password)
@@ -34,7 +34,7 @@ export class AuthService implements IAuthService {
     }
 
     async me(userId: string): Promise<AuthResult> {
-        const user = await this.repo.findById(userId)
+        const user = await this._repo.findById(userId)
         if (!user) throw new AppError(AUTH_MESSAGES.USER_NOT_FOUND, HTTP_STATUS.NOT_FOUND)
 
         return {
@@ -44,7 +44,7 @@ export class AuthService implements IAuthService {
     }
 
     async refreshToken(userId: string): Promise<TokenResult> {
-        const user = await this.repo.findById(userId)
+        const user = await this._repo.findById(userId)
         if (!user) throw new AppError(AUTH_MESSAGES.USER_NOT_FOUND, HTTP_STATUS.NOT_FOUND)
 
         return { accessToken: signAccessToken(userId) }
