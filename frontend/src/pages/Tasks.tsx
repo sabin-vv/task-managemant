@@ -45,7 +45,8 @@ export default function Tasks() {
         const socket = getSocket()
         if (!socket) return
 
-        const onCreated = (task: Task) => setTasks((prev) => [task, ...prev])
+        const onCreated = (task: Task) =>
+            setTasks((prev) => (prev.some((t) => t._id === task._id) ? prev : [task, ...prev]))
         const onUpdated = (task: Task) => setTasks((prev) => prev.map((t) => (t._id === task._id ? task : t)))
         const onDeleted = (id: string) => setTasks((prev) => prev.filter((t) => t._id !== id))
 

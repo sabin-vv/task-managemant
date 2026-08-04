@@ -80,10 +80,22 @@
     transition: background 0.15s;
 }
 
-.logoutBtn:hover,
 .statsBtn:hover {
     background: var(--accent-bg);
     border-color: var(--accent-border);
+}
+
+.logoutBtn {
+    color: #dc2626;
+    border-color: rgba(220, 38, 38, 0.4);
+    background: rgba(220, 38, 38, 0.08);
+    font-weight: 600;
+}
+
+.logoutBtn:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
 }
 
 .statsBtn {
